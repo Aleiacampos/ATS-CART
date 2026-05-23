@@ -14,7 +14,7 @@ Este repositório contém apenas o arquivo `index.html` com o dashboard CAR-T pr
 
 ## Senha de acesso
 
-- `*vnh8vdmYxF4`
+- `#Sula2026`
 
 > Envie a URL e a senha em canais diferentes para maior segurança.
 
