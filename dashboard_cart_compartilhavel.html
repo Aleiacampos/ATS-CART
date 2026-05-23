@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard CAR-T — Operadora de Saúde</title>
+<style>
+:root{
+  --dk:#0D1B2A;--md:#1B4F72;--lb:#AED6F1;
+  --lim:#2980B9;--rc:#27AE60;--lib:#8E44AD;--agu:#E67E22;
+  --y:#1565C0;--c:#2E7D32;--k:#6A1B9A;
+  --bg:#F0F4F8;--wh:#fff;--tx:#1A1A2E;--mu:#6B7280;--bo:#E2E8F0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:13px}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--dk)0%,var(--md)100%);
+  color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+.hdr h1{font-size:20px;font-weight:700;letter-spacing:.4px}
+.hdr p{font-size:11px;color:#A9CCE3;margin-top:4px}
+.hdr-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  border-radius:8px;padding:8px 18px;text-align:center}
+.hdr-badge span{display:block;font-size:28px;font-weight:800}
+.hdr-badge small{font-size:10px;color:#A9CCE3}
+
+/* FILTERS */
+.filters{background:var(--wh);border-bottom:1px solid var(--bo);
+  padding:10px 28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.filters label{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.filters select{border:1px solid var(--bo);border-radius:6px;padding:5px 10px;
+  font-size:12px;color:var(--tx);background:var(--bg);cursor:pointer;outline:none}
+.filters select:focus{border-color:var(--md)}
+.btn-r{margin-left:auto;background:var(--md);color:#fff;border:none;
+  border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:600}
+.btn-r:hover{background:var(--dk)}
+.fcnt{font-size:11px;color:var(--mu)}
+
+/* MAIN */
+.main{padding:20px 28px;max-width:1400px;margin:0 auto}
+
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--wh);border-radius:10px;padding:14px 18px;
+  border-left:4px solid;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.kpi .lb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mu)}
+.kpi .vl{font-size:32px;font-weight:800;line-height:1.1;margin:4px 0 2px}
+.kpi .sb{font-size:11px;color:var(--mu)}
+.kpi.tot{border-color:var(--dk)}.kpi.tot .vl{color:var(--dk)}
+.kpi.yes{border-color:var(--y)}.kpi.yes .vl{color:var(--y)}
+.kpi.car{border-color:var(--c)}.kpi.car .vl{color:var(--c)}
+.kpi.kym{border-color:var(--k)}.kpi.kym .vl{color:var(--k)}
+.kpi.lim{border-color:var(--lim)}.kpi.lim .vl{color:var(--lim)}
+
+/* CHARTS */
+.row1{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.row3{margin-bottom:16px}
+.card{background:var(--wh);border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.card h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--mu);margin-bottom:12px;border-bottom:1px solid var(--bo);padding-bottom:8px}
+canvas{display:block;width:100%!important}
+
+/* TABLE */
+.tcard{background:var(--wh);border-radius:10px;padding:16px 18px;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.tcard h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--mu);margin-bottom:12px;border-bottom:1px solid var(--bo);padding-bottom:8px}
+.tw{overflow-x:auto;max-height:300px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--dk);color:#fff;padding:8px 10px;text-align:left;
+  font-weight:600;font-size:11px;position:sticky;top:0;z-index:1}
+tbody tr:nth-child(even){background:#F8FAFC}
+tbody tr:hover{background:#EBF5FB}
+tbody td{padding:7px 10px;border-bottom:1px solid var(--bo);vertical-align:middle}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap}
+.tLIM{background:var(--lim)}.tRC{background:var(--rc)}.tLIB{background:var(--lib)}
+.tAGU{background:var(--agu)}.tNI{background:#9E9E9E}
+.tY{background:var(--y)}.tC{background:var(--c)}.tK{background:var(--k)}
+
+/* ALERTS */
+.arow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.acard{background:var(--wh);border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.acard h3{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--mu);
+  letter-spacing:.5px;margin-bottom:12px;border-bottom:1px solid var(--bo);padding-bottom:8px}
+.ai{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--bo)}
+.ai:last-child{border-bottom:none}
+.ai .ic{font-size:15px;flex-shrink:0;margin-top:1px}
+.ai strong{display:block;font-size:12px;margin-bottom:2px}
+.ai span{font-size:11px;color:var(--mu);line-height:1.4}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--tx)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+.footer{text-align:center;padding:14px;font-size:11px;color:var(--mu);
+  border-top:1px solid var(--bo);margin-top:8px}
+
+@media(max-width:900px){
+  .kgrid{grid-template-columns:repeat(2,1fr)}
+  .row1,.row2,.arow{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>🧬 Dashboard Executivo — Terapias CAR-T</h1>
+    <p>Operadora de Saúde · Coordenação de Avaliação em Tecnologias em Saúde (ATS) · Base: maio 2026</p>
+  </div>
+  <div class="hdr-badge">
+    <span id="hdr-total">66</span>
+    <small>Pacientes monitorados</small>
+  </div>
+</div>
+
+<div class="filters">
+  <label>Terapia</label>
+  <select id="fT"><option value="">Todas</option><option>Yescarta</option><option>Carvykti</option><option>Kymriah</option></select>
+  <label>Tipo Solicitação</label>
+  <select id="fTi"><option value="">Todos</option><option>LIMINAR</option><option>RISCO COMPARTILHADO</option><option>LIBERALIDADE</option><option>AGUARDANDO</option><option>NÃO INFORMADO</option></select>
+  <label>Linha</label>
+  <select id="fL"><option value="">Todas</option><option>1ª LINHA</option><option>2ª LINHA</option><option>3ª LINHA</option><option>4ª LINHA</option><option>5ª LINHA</option><option>NÃO INFORMADO</option></select>
+  <label>Ano</label>
+  <select id="fA"><option value="">Todos</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select>
+  <button class="btn-r" onclick="reset()">↺ Limpar</button>
+  <span class="fcnt" id="fcnt"></span>
+</div>
+
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="kgrid">
+    <div class="kpi tot"><div class="lb">Total Pacientes</div><div class="vl" id="kTotal">66</div><div class="sb">Base CAR-T consolidada</div></div>
+    <div class="kpi yes"><div class="lb">Yescarta</div><div class="vl" id="kY">32</div><div class="sb" id="kYp">48% do total</div></div>
+    <div class="kpi car"><div class="lb">Carvykti</div><div class="vl" id="kC">22</div><div class="sb" id="kCp">33% do total</div></div>
+    <div class="kpi kym"><div class="lb">Kymriah</div><div class="vl" id="kK">12</div><div class="sb" id="kKp">18% do total</div></div>
+    <div class="kpi lim"><div class="lb">Liminar Judicial</div><div class="vl" id="kL">47</div><div class="sb" id="kLp">71% do total</div></div>
+  </div>
+
+  <!-- ROW 1 -->
+  <div class="row1">
+    <div class="card">
+      <h3>📅 Evolução Temporal por Terapia</h3>
+      <canvas id="cTemporal" height="220"></canvas>
+      <div class="legend" id="legTemporal"></div>
+    </div>
+    <div class="card">
+      <h3>📋 Tipo de Solicitação</h3>
+      <canvas id="cTipo" height="220"></canvas>
+      <div class="legend" id="legTipo"></div>
+    </div>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="row2">
+    <div class="card">
+      <h3>🏥 Linha de Tratamento</h3>
+      <canvas id="cLinha" height="200"></canvas>
+    </div>
+    <div class="card">
+      <h3>🪪 Tipo de Carteira</h3>
+      <canvas id="cCarteira" height="200"></canvas>
+      <div class="legend" id="legCarteira"></div>
+    </div>
+    <div class="card">
+      <h3>🔬 Terapia × Tipo Solicitação</h3>
+      <canvas id="cTT" height="200"></canvas>
+      <div class="legend" id="legTT"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="row3 card">
+    <h3>🏨 Top Prestadores</h3>
+    <canvas id="cPrest" height="160"></canvas>
+  </div>
+
+  <!-- TABELA -->
+  <div class="tcard">
+    <h3>📋 Base de Pacientes (<span id="tCount">66</span> registros)</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Beneficiário</th><th>Terapia</th><th>Tipo Solicitação</th><th>Linha</th><th>Prestador</th><th>Carteira</th><th>Data Liminar</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ALERTAS -->
+  <div class="arow">
+    <div class="acard">
+      <h3>🚨 Alertas</h3>
+      <div class="ai"><div class="ic">🔴</div><div><strong>Alta Judicialização — 71%</strong><span>47 pacientes acessaram CAR-T via liminar judicial. Demanda estruturação de protocolos de ATS e critérios técnicos formalizados pela operadora.</span></div></div>
+      <div class="ai"><div class="ic">🟡</div><div><strong>Aguardando Decisão — 3 casos</strong><span>Casos pendentes de análise técnica. Priorizar resposta ao beneficiário e revisão pelo comitê de ATS.</span></div></div>
+      <div class="ai"><div class="ic">🟢</div><div><strong>Risco Compartilhado — 14 contratos</strong><span>Monitorar critérios de elegibilidade e desfechos clínicos para revisão e renovação contratual.</span></div></div>
+      <div class="ai"><div class="ic">✅</div><div><strong>Correção aplicada — base atualizada</strong><span>Registro duplicado (Aquiochi / Ausência de Pertinência Técnica / 2ª Linha) removido da base Yescarta. Total: 66 pacientes.</span></div></div>
+    </div>
+    <div class="acard">
+      <h3>💡 Recomendações ATS</h3>
+      <div class="ai"><div class="ic">📌</div><div><strong>Elaborar Nota Técnica CAR-T</strong><span>Formalizar critérios de cobertura por terapia e linha de tratamento para embasar contestações judiciais e negociações com prestadores.</span></div></div>
+      <div class="ai"><div class="ic">📊</div><div><strong>Monitorar Desfechos Clínicos</strong><span>Implementar acompanhamento longitudinal dos pacientes em Risco Compartilhado para subsidiar renovações e publicações científicas.</span></div></div>
+      <div class="ai"><div class="ic">🔄</div><div><strong>Padronizar Coleta de Dados</strong><span>Garantir preenchimento de carteira, linha e prestador em 100% das solicitações para análises futuras mais robustas.</span></div></div>
+      <div class="ai"><div class="ic">⚖️</div><div><strong>Estratégia de Defesa Jurídica</strong><span>Usar base de evidências e protocolos ATS para qualificar contestações e reduzir novas liminares judiciais.</span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Dashboard CAR-T · Operadora de Saúde · Coordenação ATS · Gerado em maio 2026 · 66 pacientes · Arquivo autossuficiente</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DADOS
+// ═══════════════════════════════════════════════════════════════
+const DATA=[
+{n:"Omar",t:"Yescarta",tp:"LIMINAR",d:"2023-12-04",a:"2023",p:"Hosp. 9 de Julho",l:"4ª LINHA",c:"PME"},
+{n:"Maria Estela",t:"Yescarta",tp:"LIMINAR",d:"2023-12-05",a:"2023",p:"Rede D'or - Vila Nova Star",l:"4ª LINHA",c:"Adesão"},
+{n:"Luciana Pimentel",t:"Yescarta",tp:"LIMINAR",d:"2024-12-16",a:"2024",p:"Hosp. Sirio Libanes",l:"3ª LINHA",c:"Administrado"},
+{n:"Tatiana",t:"Yescarta",tp:"LIMINAR",d:"2024-03-22",a:"2024",p:"sem informação",l:"4ª LINHA",c:"NÃO INFORMADO"},
+{n:"Antonio Amorim",t:"Yescarta",tp:"LIMINAR",d:"2024-08-08",a:"2024",p:"Rede D'or - São Rafael",l:"4ª LINHA",c:"Individual"},
+{n:"Alexandre",t:"Yescarta",tp:"LIMINAR",d:"2024-01-23",a:"2024",p:"CHN - Complexo Hospitalar Niteroi",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"Adriana",t:"Yescarta",tp:"LIMINAR",d:"2024-02-02",a:"2024",p:"AC Camargo",l:"4ª LINHA",c:"PME"},
+{n:"Vinicius",t:"Yescarta",tp:"LIMINAR",d:"2024-01-04",a:"2024",p:"Rede D'or - Vila Nova Star",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"Victoria",t:"Yescarta",tp:"LIMINAR",d:"2024-01-31",a:"2024",p:"Rede D'or - Vila Nova Star",l:"4ª LINHA",c:"Adesão"},
+{n:"Joao Carlos",t:"Yescarta",tp:"LIMINAR",d:"2024-06-21",a:"2024",p:"Rede D'or - Vila Nova Star",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"Luciana Medeiros",t:"Yescarta",tp:"LIMINAR",d:"2024-12-16",a:"2024",p:"AC Camargo",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"João de Matos",t:"Yescarta",tp:"LIMINAR",d:"2025-01-02",a:"2025",p:"Rede D'or - Vila Nova Star",l:"3ª LINHA",c:"Empresarial (Outros)"},
+{n:"Silvana",t:"Yescarta",tp:"LIMINAR",d:"2025-08-07",a:"2025",p:"AC Camargo",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"Carolina",t:"Yescarta",tp:"LIMINAR",d:"2025-06-06",a:"2025",p:"Hosp. 9 de Julho - Rede ímpar",l:"3ª LINHA",c:"PME"},
+{n:"Andre Cippra",t:"Yescarta",tp:"LIMINAR",d:"2025-06-23",a:"2025",p:"Rede D'or - São Luiz Itaim",l:"3ª LINHA",c:"Empresarial (Outros)"},
+{n:"Alberto",t:"Yescarta",tp:"LIMINAR",d:"2025-07-31",a:"2025",p:"Rede D'or - Hosp. Memorial São José",l:"3ª LINHA",c:"PME"},
+{n:"Priscilia",t:"Yescarta",tp:"LIBERALIDADE",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"3ª LINHA",c:"Empresarial (Outros)"},
+{n:"Maria das Graças",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Rafael",l:"2ª LINHA",c:"Adesão"},
+{n:"Aline",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"AC Camargo",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"Cassio",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"PME"},
+{n:"Francesca",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"PME"},
+{n:"Hudnesca",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"PME"},
+{n:"Sandra",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"AC Camargo",l:"2ª LINHA",c:"Individual"},
+{n:"Jessica",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"3ª LINHA",c:"Empresarial (Outros)"},
+{n:"Jose valeriano",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"3ª LINHA",c:"Individual"},
+{n:"Reinaldo",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"Adesão"},
+{n:"Joel",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - Vila Nova Star",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"Reto",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"PME"},
+{n:"Ricardo",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Luiz Itaim",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"Rafael",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Rafael",l:"2ª LINHA",c:"PME"},
+{n:"Aquiochi",t:"Yescarta",tp:"RISCO COMPARTILHADO",d:null,a:"S/D",p:"Rede D'or - São Rafael",l:"3ª LINHA",c:"Adesão"},
+{n:"Regina",t:"Yescarta",tp:"AGUARDANDO",d:null,a:"S/D",p:"Rio de Janeiro",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-12-05",a:"2025",p:"—",l:"3ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2024-08-02",a:"2024",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-24",a:"2026",p:"—",l:"5ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-01",a:"2026",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-26",a:"2026",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2024-10-25",a:"2024",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-07-17",a:"2025",p:"—",l:"2ª LINHA",c:"Individual"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-02-27",a:"2026",p:"—",l:"3ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-08-19",a:"2025",p:"—",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-31",a:"2026",p:"—",l:"5ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-11-15",a:"2025",p:"—",l:"4ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-02-05",a:"2026",p:"—",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2024-09-20",a:"2024",p:"—",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-05-19",a:"2025",p:"—",l:"4ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-03",a:"2026",p:"—",l:"4ª LINHA",c:"Adesão"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2025-08-22",a:"2025",p:"—",l:"4ª LINHA",c:"Empresarial (Qualicorp)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-03-05",a:"2026",p:"—",l:"4ª LINHA",c:"Individual"},
+{n:"—",t:"Carvykti",tp:"LIBERALIDADE",d:"2026-03-13",a:"2026",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-02-20",a:"2026",p:"—",l:"3ª LINHA",c:"Individual"},
+{n:"—",t:"Carvykti",tp:"LIMINAR",d:"2026-04-29",a:"2026",p:"—",l:"3ª LINHA",c:"PME"},
+{n:"—",t:"Carvykti",tp:"AGUARDANDO",d:null,a:"S/D",p:"—",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"—",t:"Carvykti",tp:"AGUARDANDO",d:null,a:"S/D",p:"—",l:"2ª LINHA",c:"Empresarial (Outros)"},
+{n:"MEIRE",t:"Kymriah",tp:"LIMINAR",d:"2022-12-29",a:"2022",p:"Hosp. Albert Einstein",l:"4ª LINHA",c:"PME"},
+{n:"MARIA DE FATIMA",t:"Kymriah",tp:"LIMINAR",d:"2023-03-15",a:"2023",p:"Centro de Saúde São José RJ",l:"NÃO INFORMADO",c:"PME"},
+{n:"ARTHUR",t:"Kymriah",tp:"LIMINAR",d:"2023-05-02",a:"2023",p:"CHN - Complexo Hosp. Niteroi RJ",l:"NÃO INFORMADO",c:"Empresarial (Outros)"},
+{n:"Guilherme Tega",t:"Kymriah",tp:"LIMINAR",d:"2023-05-12",a:"2023",p:"AC Camargo",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"DENISE",t:"Kymriah",tp:"LIMINAR",d:"2023-08-01",a:"2023",p:"Hosp. Albert Einstein",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"ANTONIO AURELIO",t:"Kymriah",tp:"LIMINAR",d:"2023-04-05",a:"2023",p:"Rede D'or - São Luiz Itaim",l:"4ª LINHA",c:"Empresarial (Outros)"},
+{n:"RENATO BASSI",t:"Kymriah",tp:"LIMINAR",d:"2023-09-05",a:"2023",p:"AC Camargo",l:"NÃO INFORMADO",c:"Empresarial (Outros)"},
+{n:"ALINE BRUNO",t:"Kymriah",tp:"LIMINAR",d:"2023-01-04",a:"2023",p:"Rede D'or - Glória D'Or",l:"NÃO INFORMADO",c:"Empresarial (Outros)"},
+{n:"GUILHERME TROVO",t:"Kymriah",tp:"LIMINAR",d:"2024-07-02",a:"2024",p:"AC Camargo",l:"NÃO INFORMADO",c:"Empresarial (Outros)"},
+{n:"GABRIEL",t:"Kymriah",tp:"LIMINAR",d:"2024-08-08",a:"2024",p:"Rede D'or - São Rafael",l:"3ª LINHA",c:"PME"},
+{n:"JULIO CESAR",t:"Kymriah",tp:"LIMINAR",d:"2025-01-22",a:"2025",p:"Rede D'or - São Luiz Itaim",l:"4ª LINHA",c:"PME"},
+{n:"NICOLAS",t:"Kymriah",tp:"LIMINAR",d:"2025-10-22",a:"2025",p:"Rede D'or - São Luiz Itaim",l:"3ª LINHA",c:"Empresarial (Outros)"}
+];
+
+// ═══════════════════════════════════════════════════════════════
+// MINI CHART ENGINE (Canvas puro, sem dependências)
+// ═══════════════════════════════════════════════════════════════
+const DPR = window.devicePixelRatio || 1;
+
+function setupCanvas(id, heightPx) {
+  const canvas = document.getElementById(id);
+  const w = canvas.parentElement.clientWidth - 36;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = heightPx + 'px';
+  canvas.width  = w * DPR;
+  canvas.height = heightPx * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  return { ctx, w, h: heightPx };
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.min(r, Math.abs(h) / 2, Math.abs(w) / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// Stacked Bar (horizontal groups) — temporal
+function drawStackedBar(id, labels, datasets, heightPx) {
+  const {ctx, w, h} = setupCanvas(id, heightPx);
+  const PAD = {t:10, b:30, l:10, r:10};
+  const chartW = w - PAD.l - PAD.r;
+  const chartH = h - PAD.t - PAD.b;
+  const n = labels.length;
+  const groupW = chartW / n;
+  const barW = groupW * 0.65;
+  const barPad = (groupW - barW) / 2;
+
+  // max total
+  const totals = labels.map((_, i) => datasets.reduce((s, ds) => s + (ds.data[i] || 0), 0));
+  const maxVal = Math.max(...totals, 1);
+
+  // grid lines
+  ctx.strokeStyle = '#F0F0F0';
+  ctx.lineWidth = 1;
+  const steps = 5;
+  for (let s = 0; s <= steps; s++) {
+    const v = maxVal * s / steps;
+    const y = PAD.t + chartH - (v / maxVal) * chartH;
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + chartW, y); ctx.stroke();
+    ctx.fillStyle = '#9E9E9E'; ctx.font = '9px Segoe UI'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(v), PAD.l - 3, y + 3);
+  }
+
+  // bars
+  labels.forEach((lbl, i) => {
+    let baseY = PAD.t + chartH;
+    const x = PAD.l + i * groupW + barPad;
+    datasets.forEach(ds => {
+      const val = ds.data[i] || 0;
+      if (!val) return;
+      const bh = (val / maxVal) * chartH;
+      ctx.fillStyle = ds.color + 'CC';
+      roundRect(ctx, x, baseY - bh, barW, bh, 3);
+      ctx.fill();
+      if (val > 0) {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 9px Segoe UI';
+        ctx.textAlign = 'center';
+        if (bh > 14) ctx.fillText(val, x + barW / 2, baseY - bh + 11);
+      }
+      baseY -= bh;
+    });
+    // label
+    ctx.fillStyle = '#6B7280'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+    ctx.fillText(lbl, PAD.l + i * groupW + groupW / 2, h - 8);
+    // total
+    const tot = totals[i];
+    if (tot > 0) {
+      ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+      const topY = PAD.t + chartH - (tot / maxVal) * chartH;
+      ctx.fillText(tot, PAD.l + i * groupW + groupW / 2, topY - 4);
+    }
+  });
+}
+
+// Donut chart
+function drawDonut(id, labels, values, colors, heightPx) {
+  const {ctx, w, h} = setupCanvas(id, heightPx);
+  const cx = w / 2, cy = h / 2;
+  const R = Math.min(cx, cy) - 10;
+  const r = R * 0.55;
+  const total = values.reduce((s, v) => s + v, 0);
+  if (!total) return;
+  let angle = -Math.PI / 2;
+  values.forEach((v, i) => {
+    const slice = (v / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+    // percent label
+    if (v / total > 0.05) {
+      const mid = angle + slice / 2;
+      const lx = cx + (R * 0.75) * Math.cos(mid);
+      const ly = cy + (R * 0.75) * Math.sin(mid);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+      ctx.fillText(Math.round(v / total * 100) + '%', lx, ly + 3);
+    }
+    angle += slice;
+  });
+  // hole
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  // center text
+  ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 18px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText(total, cx, cy + 4);
+  ctx.fillStyle = '#6B7280'; ctx.font = '9px Segoe UI';
+  ctx.fillText('pacientes', cx, cy + 16);
+}
+
+// Horizontal bar chart
+function drawHBar(id, labels, values, colors, heightPx) {
+  const {ctx, w, h} = setupCanvas(id, heightPx);
+  const n = labels.length;
+  const PAD = {t:4, b:4, l:90, r:40};
+  const chartH = h - PAD.t - PAD.b;
+  const barH = Math.min(22, (chartH / n) - 4);
+  const gap = (chartH - barH * n) / (n + 1);
+  const maxVal = Math.max(...values, 1);
+
+  labels.forEach((lbl, i) => {
+    const val = values[i];
+    const y = PAD.t + gap + i * (barH + gap);
+    const bw = (val / maxVal) * (w - PAD.l - PAD.r);
+
+    // label
+    ctx.fillStyle = '#1A1A2E'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'right';
+    const shortLbl = lbl.length > 13 ? lbl.slice(0, 12) + '…' : lbl;
+    ctx.fillText(shortLbl, PAD.l - 5, y + barH / 2 + 3);
+
+    // bar bg
+    ctx.fillStyle = '#F0F0F0';
+    roundRect(ctx, PAD.l, y, w - PAD.l - PAD.r, barH, 3);
+    ctx.fill();
+
+    // bar fill
+    ctx.fillStyle = Array.isArray(colors) ? colors[i] : colors;
+    if (bw > 0) { roundRect(ctx, PAD.l, y, bw, barH, 3); ctx.fill(); }
+
+    // value
+    ctx.fillStyle = val > maxVal * 0.25 ? '#fff' : '#1A1A2E';
+    ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'left';
+    const vx = PAD.l + Math.max(bw - 22, 4);
+    ctx.fillText(val, vx > PAD.l + bw + 2 ? PAD.l + bw + 4 : vx, y + barH / 2 + 3);
+  });
+}
+
+// Pie chart (small, for carteira)
+function drawPie(id, labels, values, colors, heightPx) {
+  const {ctx, w, h} = setupCanvas(id, heightPx);
+  const cx = w / 2, cy = h / 2;
+  const R = Math.min(cx, cy) - 8;
+  const total = values.reduce((s, v) => s + v, 0);
+  if (!total) return;
+  let angle = -Math.PI / 2;
+  values.forEach((v, i) => {
+    const slice = (v / total) * 2 * Math.PI;
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i]; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    if (v / total > 0.06) {
+      const mid = angle + slice / 2;
+      const lx = cx + (R * 0.7) * Math.cos(mid);
+      const ly = cy + (R * 0.7) * Math.sin(mid);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Segoe UI'; ctx.textAlign = 'center';
+      ctx.fillText(Math.round(v / total * 100) + '%', lx, ly + 3);
+    }
+    angle += slice;
+  });
+}
+
+function makeLegend(elId, labels, colors) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = labels.map((lbl, i) =>
+    `<div class="leg-item"><div class="leg-dot" style="background:${colors[i]}"></div>${lbl}</div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILTROS + RENDER
+// ═══════════════════════════════════════════════════════════════
+let F = [...DATA];
+
+function ct(arr, key, val) { return arr.filter(d => d[key] === val).length; }
+function cu(arr, key) { const m = {}; arr.forEach(d => { m[d[key]] = (m[d[key]] || 0) + 1; }); return m; }
+function pct(n, t) { return t ? Math.round(n * 100 / t) + '%' : '0%'; }
+
+function applyFilters() {
+  const vT = document.getElementById('fT').value;
+  const vTi = document.getElementById('fTi').value;
+  const vL = document.getElementById('fL').value;
+  const vA = document.getElementById('fA').value;
+  F = DATA.filter(d =>
+    (!vT || d.t === vT) && (!vTi || d.tp === vTi) &&
+    (!vL || d.l === vL) && (!vA || d.a === vA)
+  );
+  document.getElementById('fcnt').textContent =
+    F.length < DATA.length ? `${F.length} de ${DATA.length} registros` : '';
+  render();
+}
+
+function reset() {
+  ['fT','fTi','fL','fA'].forEach(id => document.getElementById(id).value = '');
+  applyFilters();
+}
+
+['fT','fTi','fL','fA'].forEach(id =>
+  document.getElementById(id).addEventListener('change', applyFilters));
+
+function render() {
+  const tot = F.length;
+  document.getElementById('hdr-total').textContent = tot;
+  document.getElementById('kTotal').textContent = tot;
+  const y = ct(F,'t','Yescarta'), c = ct(F,'t','Carvykti'), k = ct(F,'t','Kymriah');
+  const l = ct(F,'tp','LIMINAR');
+  document.getElementById('kY').textContent = y; document.getElementById('kYp').textContent = pct(y,tot)+' do total';
+  document.getElementById('kC').textContent = c; document.getElementById('kCp').textContent = pct(c,tot)+' do total';
+  document.getElementById('kK').textContent = k; document.getElementById('kKp').textContent = pct(k,tot)+' do total';
+  document.getElementById('kL').textContent = l; document.getElementById('kLp').textContent = pct(l,tot)+' do total';
+
+  // Temporal
+  const anos = ['2022','2023','2024','2025','2026'];
+  const terapias = [{label:'Yescarta',color:'#1565C0'},{label:'Carvykti',color:'#2E7D32'},{label:'Kymriah',color:'#6A1B9A'}];
+  const datasets = terapias.map(({label,color}) => ({
+    data: anos.map(a => F.filter(d => d.t===label && d.a===a).length), color
+  }));
+  drawStackedBar('cTemporal', anos, datasets, 220);
+  makeLegend('legTemporal', terapias.map(x=>x.label), terapias.map(x=>x.color));
+
+  // Tipo donut
+  const tipos  = ['LIMINAR','RISCO COMPARTILHADO','LIBERALIDADE','AGUARDANDO','NÃO INFORMADO'];
+  const tColors = ['#2980B9','#27AE60','#8E44AD','#E67E22','#9E9E9E'];
+  const tVals   = tipos.map(tp => ct(F,'tp',tp));
+  drawDonut('cTipo', tipos, tVals, tColors, 220);
+  makeLegend('legTipo', tipos.map(t=>t==='RISCO COMPARTILHADO'?'RISCO COMP.':t), tColors);
+
+  // Linha hbar
+  const linhas  = ['4ª LINHA','3ª LINHA','2ª LINHA','5ª LINHA','NÃO INFORMADO'];
+  const lColors = ['#1565C0','#0097A7','#00796B','#6A1B9A','#9E9E9E'];
+  drawHBar('cLinha', linhas, linhas.map(v=>ct(F,'l',v)), lColors, 200);
+
+  // Carteira pie
+  const knownC = ['PME','Adesão','Individual','Empresarial (Qualicorp)','Empresarial (Outros)','Administrado','Outros'];
+  const cPal   = ['#1565C0','#0288D1','#00838F','#2E7D32','#558B2F','#F57F17','#9E9E9E'];
+  const mC = cu(F,'c');
+  const cVals = ['PME','Adesão','Individual','Empresarial (Qualicorp)','Empresarial (Outros)','Administrado'].map(k=>mC[k]||0);
+  const outros = Object.entries(mC).filter(([k])=>!['PME','Adesão','Individual','Empresarial (Qualicorp)','Empresarial (Outros)','Administrado'].includes(k)).reduce((s,[,v])=>s+v,0);
+  cVals.push(outros);
+  const activeC = knownC.map((l,i)=>({l,v:cVals[i],col:cPal[i]})).filter(x=>x.v>0);
+  drawPie('cCarteira', activeC.map(x=>x.l), activeC.map(x=>x.v), activeC.map(x=>x.col), 165);
+  makeLegend('legCarteira', activeC.map(x=>x.l), activeC.map(x=>x.col));
+
+  // Terapia x Tipo stacked
+  const terLabels = ['Yescarta','Carvykti','Kymriah'];
+  const ttTypes   = [{label:'LIMINAR',color:'#2980B9'},{label:'R.COMP.',tp:'RISCO COMPARTILHADO',color:'#27AE60'},
+                     {label:'LIBERALIDADE',color:'#8E44AD'},{label:'AGUARDANDO',color:'#E67E22'}];
+  const ttDS = ttTypes.map(({label,tp,color}) => ({
+    data: terLabels.map(ter => F.filter(d=>d.t===ter&&d.tp===(tp||label)).length), color
+  }));
+  drawStackedBar('cTT', terLabels, ttDS, 200);
+  makeLegend('legTT', ttTypes.map(x=>x.label), ttTypes.map(x=>x.color));
+
+  // Top prestadores hbar
+  const mP = cu(F,'p');
+  delete mP['—']; delete mP['sem informação']; delete mP['NÃO INFORMADO'];
+  const topP = Object.entries(mP).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const pPal = ['#1565C0','#0288D1','#2E7D32','#558B2F','#6A1B9A','#00838F','#F57F17','#E65100'];
+  if (topP.length) {
+    drawHBar('cPrest',
+      topP.map(([k])=> k.length>30 ? k.slice(0,28)+'…':k),
+      topP.map(([,v])=>v), pPal.slice(0,topP.length), 160);
+  }
+
+  // Tabela
+  const tClsMap = {'LIMINAR':'tLIM','RISCO COMPARTILHADO':'tRC','LIBERALIDADE':'tLIB','AGUARDANDO':'tAGU'};
+  const tTer    = {'Yescarta':'tY','Carvykti':'tC','Kymriah':'tK'};
+  document.getElementById('tCount').textContent = F.length;
+  document.getElementById('tbody').innerHTML = F.map((d,i)=>`
+    <tr>
+      <td style="color:#9E9E9E;font-size:11px">${i+1}</td>
+      <td style="font-weight:600">${d.n}</td>
+      <td><span class="tag ${tTer[d.t]||''}">${d.t}</span></td>
+      <td><span class="tag ${tClsMap[d.tp]||'tNI'}">${d.tp==='RISCO COMPARTILHADO'?'R. COMPARTILHADO':d.tp}</span></td>
+      <td style="font-size:11px">${d.l}</td>
+      <td style="font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${d.p}">${d.p}</td>
+      <td style="font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${d.c}">${d.c}</td>
+      <td style="font-size:11px;color:${d.d?'#1A1A2E':'#BDBDBD'}">${d.d||'—'}</td>
+    </tr>`).join('');
+}
+
+// Re-render on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(render, 200);
+});
+
+render();
+</script>
+</body>
+</html>

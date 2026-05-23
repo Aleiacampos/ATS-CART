@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard CAR-T — Operadora de Saúde</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --dark-blue:#0D1B2A; --med-blue:#1B4F72; --light-blue:#AED6F1;
+    --gold:#F39C12; --liminar:#2980B9; --rc:#27AE60; --liber:#8E44AD;
+    --aguard:#E67E22; --yesc:#1565C0; --carv:#2E7D32; --kymr:#6A1B9A;
+    --bg:#F0F4F8; --card-bg:#FFFFFF; --text:#1A1A2E; --muted:#6B7280; --border:#E2E8F0;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); font-size:13px; }
+
+  .header { background:linear-gradient(135deg,var(--dark-blue) 0%,var(--med-blue) 100%);
+    color:#fff; padding:18px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; letter-spacing:.5px; }
+  .header p  { font-size:11px; color:#A9CCE3; margin-top:3px; }
+  .header-badge { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+    border-radius:8px; padding:6px 16px; text-align:center; }
+  .header-badge span { display:block; font-size:26px; font-weight:800; }
+  .header-badge small { font-size:10px; color:#A9CCE3; }
+
+  .filters { background:var(--card-bg); border-bottom:1px solid var(--border);
+    padding:10px 28px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .filters label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+  .filters select { border:1px solid var(--border); border-radius:6px; padding:5px 10px;
+    font-size:12px; color:var(--text); background:var(--bg); cursor:pointer; outline:none; }
+  .filters select:focus { border-color:var(--med-blue); }
+  .btn-reset { margin-left:auto; background:var(--med-blue); color:#fff; border:none;
+    border-radius:6px; padding:6px 14px; font-size:12px; cursor:pointer; font-weight:600; }
+  .btn-reset:hover { background:var(--dark-blue); }
+  .filter-count { font-size:11px; color:var(--muted); }
+
+  .main { padding:20px 28px; max-width:1400px; margin:0 auto; }
+
+  .kpi-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:22px; }
+  .kpi { background:var(--card-bg); border-radius:10px; padding:16px 18px;
+    border-left:4px solid; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+  .kpi .label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+  .kpi .value { font-size:32px; font-weight:800; line-height:1.1; margin:4px 0 2px; }
+  .kpi .sub   { font-size:11px; color:var(--muted); }
+  .kpi.total { border-color:var(--dark-blue); } .kpi.total .value { color:var(--dark-blue); }
+  .kpi.yesc  { border-color:var(--yesc); }      .kpi.yesc  .value { color:var(--yesc); }
+  .kpi.carv  { border-color:var(--carv); }      .kpi.carv  .value { color:var(--carv); }
+  .kpi.kymr  { border-color:var(--kymr); }      .kpi.kymr  .value { color:var(--kymr); }
+  .kpi.lim   { border-color:var(--liminar); }   .kpi.lim   .value { color:var(--liminar); }
+
+  .charts-row  { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+  .charts-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+  .card { background:var(--card-bg); border-radius:10px; padding:16px 18px;
+    box-shadow:0 1px 4px rgba(0,0,0,.07); }
+  .card h3 { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--muted); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+  .chart-wrap { position:relative; }
+  .chart-wrap.tall  { height:240px; }
+  .chart-wrap.short { height:200px; }
+  .chart-wrap.hbar  { height:220px; }
+
+  .table-card { background:var(--card-bg); border-radius:10px; padding:16px 18px;
+    box-shadow:0 1px 4px rgba(0,0,0,.07); margin-bottom:16px; }
+  .table-card h3 { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--muted); margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+  .tbl-wrap { overflow-x:auto; max-height:320px; overflow-y:auto; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { background:var(--dark-blue); color:#fff; padding:8px 10px; text-align:left;
+    font-weight:600; font-size:11px; position:sticky; top:0; z-index:1; }
+  tbody tr:nth-child(even) { background:#F8FAFC; }
+  tbody tr:hover { background:#EBF5FB; }
+  tbody td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px;
+    font-weight:700; color:#fff; white-space:nowrap; }
+  .tag.LIMINAR      { background:var(--liminar); }
+  .tag.RC           { background:var(--rc); }
+  .tag.LIBERALIDADE { background:var(--liber); }
+  .tag.AGUARDANDO   { background:var(--aguard); }
+  .tag.NI           { background:#9E9E9E; }
+  .tag.Yescarta     { background:var(--yesc); }
+  .tag.Carvykti     { background:var(--carv); }
+  .tag.Kymriah      { background:var(--kymr); }
+
+  .alerts-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .alert-card { background:var(--card-bg); border-radius:10px; padding:16px 18px;
+    box-shadow:0 1px 4px rgba(0,0,0,.07); }
+  .alert-card h3 { font-size:12px; font-weight:700; text-transform:uppercase; color:var(--muted);
+    letter-spacing:.5px; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+  .alert-item { display:flex; gap:10px; align-items:flex-start; padding:8px 0;
+    border-bottom:1px solid var(--border); }
+  .alert-item:last-child { border-bottom:none; }
+  .alert-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+  .alert-text strong { display:block; font-size:12px; color:var(--text); }
+  .alert-text span   { font-size:11px; color:var(--muted); line-height:1.4; }
+
+  .footer { text-align:center; padding:14px; font-size:11px; color:var(--muted);
+    border-top:1px solid var(--border); margin-top:8px; }
+
+  @media(max-width:900px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .charts-row,.charts-row2,.alerts-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🧬 Dashboard Executivo — Terapias CAR-T</h1>
+    <p>Operadora de Saúde · Coordenação de Avaliação em Tecnologias em Saúde (ATS) · Base: maio 2026</p>
+  </div>
+  <div class="header-badge">
+    <span id="hdr-total">66</span>
+    <small>Pacientes monitorados</small>
+  </div>
+</div>
+
+<div class="filters">
+  <label>Terapia</label>
+  <select id="f-terapia">
+    <option value="">Todas</option>
+    <option>Yescarta</option><option>Carvykti</option><option>Kymriah</option>
+  </select>
+  <label>Tipo Solicitação</label>
+  <select id="f-tipo">
+    <option value="">Todos</option>
+    <option>LIMINAR</option><option>RISCO COMPARTILHADO</option>
+    <option>LIBERALIDADE</option><option>AGUARDANDO</option><option>NÃO INFORMADO</option>
+  </select>
+  <label>Linha</label>
+  <select id="f-linha">
+    <option value="">Todas</option>
+    <option>1ª LINHA</option><option>2ª LINHA</option><option>3ª LINHA</option>
+    <option>4ª LINHA</option><option>5ª LINHA</option><option>NÃO INFORMADO</option>
+  </select>
+  <label>Ano</label>
+  <select id="f-ano">
+    <option value="">Todos</option>
+    <option>2022</option><option>2023</option><option>2024</option>
+    <option>2025</option><option>2026</option>
+  </select>
+  <button class="btn-reset" onclick="resetFilters()">↺ Limpar</button>
+  <span class="filter-count" id="filter-count"></span>
+</div>
+
+<div class="main">
+
+  <div class="kpi-grid">
+    <div class="kpi total">
+      <div class="label">Total Pacientes</div>
+      <div class="value" id="kpi-total">66</div>
+      <div class="sub">Base consolidada CAR-T</div>
+    </div>
+    <div class="kpi yesc">
+      <div class="label">Yescarta</div>
+      <div class="value" id="kpi-yesc">32</div>
+      <div class="sub" id="kpi-yesc-pct">48% do total</div>
+    </div>
+    <div class="kpi carv">
+      <div class="label">Carvykti</div>
+      <div class="value" id="kpi-carv">22</div>
+      <div class="sub" id="kpi-carv-pct">33% do total</div>
+    </div>
+    <div class="kpi kymr">
+      <div class="label">Kymriah</div>
+      <div class="value" id="kpi-kymr">12</div>
+      <div class="sub" id="kpi-kymr-pct">18% do total</div>
+    </div>
+    <div class="kpi lim">
+      <div class="label">Liminar Judicial</div>
+      <div class="value" id="kpi-lim">47</div>
+      <div class="sub" id="kpi-lim-pct">71% do total</div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="card">
+      <h3>📅 Evolução Temporal por Terapia</h3>
+      <div class="chart-wrap tall"><canvas id="chartTemporal"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📋 Tipo de Solicitação</h3>
+      <div class="chart-wrap tall"><canvas id="chartTipo"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-row2">
+    <div class="card">
+      <h3>🏥 Linha de Tratamento</h3>
+      <div class="chart-wrap hbar"><canvas id="chartLinha"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🪪 Tipo de Carteira</h3>
+      <div class="chart-wrap hbar"><canvas id="chartCarteira"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🔬 Terapia × Tipo Solicitação</h3>
+      <div class="chart-wrap hbar"><canvas id="chartTerapiaTipo"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3>🏨 Top Prestadores</h3>
+    <div class="chart-wrap" style="height:180px"><canvas id="chartPrestador"></canvas></div>
+  </div>
+
+  <div class="table-card">
+    <h3>📋 Base de Pacientes (<span id="tbl-count">66</span> registros)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Beneficiário</th><th>Terapia</th><th>Tipo Solicitação</th>
+            <th>Linha</th><th>Prestador</th><th>Carteira</th><th>Data Liminar</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alerts-row">
+    <div class="alert-card">
+      <h3>🚨 Alertas</h3>
+      <div class="alert-item">
+        <div class="alert-icon">🔴</div>
+        <div class="alert-text">
+          <strong>Alta Judicialização — 71%</strong>
+          <span>47 pacientes acessaram CAR-T via liminar judicial. Demanda estruturação de protocolos de ATS e critérios técnicos formalizados.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">🟡</div>
+        <div class="alert-text">
+          <strong>Aguardando Decisão — 3 casos</strong>
+          <span>Casos pendentes de análise técnica. Priorizar resposta ao beneficiário e revisão pelo comitê de ATS.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">🟢</div>
+        <div class="alert-text">
+          <strong>Risco Compartilhado — 14 contratos ativos</strong>
+          <span>Monitorar critérios de elegibilidade e desfechos clínicos para revisão e renovação contratual.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">✅</div>
+        <div class="alert-text">
+          <strong>Correção aplicada — Aquiochi</strong>
+          <span>Registro duplicado (Ausência de Pertinência Técnica / 2ª Linha) removido da base Yescarta. Base atualizada: 66 pacientes.</span>
+        </div>
+      </div>
+    </div>
+    <div class="alert-card">
+      <h3>💡 Recomendações ATS</h3>
+      <div class="alert-item">
+        <div class="alert-icon">📌</div>
+        <div class="alert-text">
+          <strong>Elaborar Nota Técnica CAR-T</strong>
+          <span>Formalizar critérios de cobertura por terapia e linha de tratamento para embasar contestações judiciais e negociações.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">📊</div>
+        <div class="alert-text">
+          <strong>Monitorar Desfechos Clínicos</strong>
+          <span>Implementar acompanhamento longitudinal dos pacientes em Risco Compartilhado para subsidiar renovações e publicações.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">🔄</div>
+        <div class="alert-text">
+          <strong>Padronizar Coleta de Dados</strong>
+          <span>Garantir preenchimento de carteira, linha e prestador em 100% das solicitações para análises futuras mais precisas.</span>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-icon">⚖️</div>
+        <div class="alert-text">
+          <strong>Estratégia de Defesa Jurídica</strong>
+          <span>Usar base de evidências e protocolos ATS para qualificar contestações e reduzir novas liminares.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Dashboard CAR-T · Operadora de Saúde · Coordenação ATS · Gerado em maio 2026 · Base: 66 pacientes
+</div>
+
+<script>
+const DATA = [
+  {nome:"Omar",terapia:"Yescarta",tipo:"LIMINAR",data:"2023-12-04",ano:"2023",prestador:"Hosp. 9 de Julho",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"Maria Estela",terapia:"Yescarta",tipo:"LIMINAR",data:"2023-12-05",ano:"2023",prestador:"Rede D'or - Vila Nova Star",linha:"4ª LINHA",carteira:"Adesão"},
+  {nome:"Luciana Pimentel",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-12-16",ano:"2024",prestador:"Hosp. Sirio Libanes",linha:"3ª LINHA",carteira:"Administrado"},
+  {nome:"Tatiana",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-03-22",ano:"2024",prestador:"sem informação",linha:"4ª LINHA",carteira:"NÃO INFORMADO"},
+  {nome:"Antonio Amorim",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-08-08",ano:"2024",prestador:"Rede D'or - São Rafael",linha:"4ª LINHA",carteira:"Individual"},
+  {nome:"Alexandre",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-01-23",ano:"2024",prestador:"CHN - Complexo Hospitalar de Niteroi",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Adriana",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-02-02",ano:"2024",prestador:"AC Camargo",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"Vinicius",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-01-04",ano:"2024",prestador:"Rede D'or - Vila Nova Star",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Victoria",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-01-31",ano:"2024",prestador:"Rede D'or - Vila Nova Star",linha:"4ª LINHA",carteira:"Adesão"},
+  {nome:"Joao Carlos",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-06-21",ano:"2024",prestador:"Rede D'or - Vila Nova Star",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"Luciana Medeiros",terapia:"Yescarta",tipo:"LIMINAR",data:"2024-12-16",ano:"2024",prestador:"AC Camargo",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"João de Matos",terapia:"Yescarta",tipo:"LIMINAR",data:"2025-01-02",ano:"2025",prestador:"Rede D'or - Vila Nova Star",linha:"3ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Silvana",terapia:"Yescarta",tipo:"LIMINAR",data:"2025-08-07",ano:"2025",prestador:"AC Camargo",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"Carolina",terapia:"Yescarta",tipo:"LIMINAR",data:"2025-06-06",ano:"2025",prestador:"Hosp. 9 de Julho - Rede ímpar",linha:"3ª LINHA",carteira:"PME"},
+  {nome:"Andre Cippra",terapia:"Yescarta",tipo:"LIMINAR",data:"2025-06-23",ano:"2025",prestador:"Rede D'or - São Luiz Itaim",linha:"3ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Alberto",terapia:"Yescarta",tipo:"LIMINAR",data:"2025-07-31",ano:"2025",prestador:"Rede D'or - Hosp. Memorial São José/Recife",linha:"3ª LINHA",carteira:"PME"},
+  {nome:"Priscilia",terapia:"Yescarta",tipo:"LIBERALIDADE",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"3ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Maria das Graças",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Rafael",linha:"2ª LINHA",carteira:"Adesão"},
+  {nome:"Aline",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"AC Camargo",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Cassio",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"PME"},
+  {nome:"Francesca",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"PME"},
+  {nome:"Hudnesca",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"PME"},
+  {nome:"Sandra",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"AC Camargo",linha:"2ª LINHA",carteira:"Individual"},
+  {nome:"Jessica",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"3ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Jose valeriano",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"3ª LINHA",carteira:"Individual"},
+  {nome:"Reinaldo",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"Adesão"},
+  {nome:"Joel",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - Vila Nova Star",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Reto",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"PME"},
+  {nome:"Ricardo",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Luiz Itaim",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"Rafael",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Rafael",linha:"2ª LINHA",carteira:"PME"},
+  {nome:"Aquiochi",terapia:"Yescarta",tipo:"RISCO COMPARTILHADO",data:null,ano:"S/D",prestador:"Rede D'or - São Rafael",linha:"3ª LINHA",carteira:"Adesão"},
+  {nome:"Regina",terapia:"Yescarta",tipo:"AGUARDANDO",data:null,ano:"S/D",prestador:"Rio de Janeiro",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-12-05",ano:"2025",prestador:"—",linha:"3ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2024-08-02",ano:"2024",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-24",ano:"2026",prestador:"—",linha:"5ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-01",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-26",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2024-10-25",ano:"2024",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-07-17",ano:"2025",prestador:"—",linha:"2ª LINHA",carteira:"Individual"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-02-27",ano:"2026",prestador:"—",linha:"3ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-08-19",ano:"2025",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-31",ano:"2026",prestador:"—",linha:"5ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-11-15",ano:"2025",prestador:"—",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-02-05",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2024-09-20",ano:"2024",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-05-19",ano:"2025",prestador:"—",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-03",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Adesão"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2025-08-22",ano:"2025",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Qualicorp)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-03-05",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Individual"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIBERALIDADE",data:"2026-03-13",ano:"2026",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-02-20",ano:"2026",prestador:"—",linha:"3ª LINHA",carteira:"Individual"},
+  {nome:"—",terapia:"Carvykti",tipo:"LIMINAR",data:"2026-04-29",ano:"2026",prestador:"—",linha:"3ª LINHA",carteira:"PME"},
+  {nome:"—",terapia:"Carvykti",tipo:"AGUARDANDO",data:null,ano:"S/D",prestador:"—",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"—",terapia:"Carvykti",tipo:"AGUARDANDO",data:null,ano:"S/D",prestador:"—",linha:"2ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"MEIRE",terapia:"Kymriah",tipo:"LIMINAR",data:"2022-12-29",ano:"2022",prestador:"Hosp. Albert Einstein",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"MARIA DE FATIMA",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-03-15",ano:"2023",prestador:"Centro de Saúde São José RJ",linha:"NÃO INFORMADO",carteira:"PME"},
+  {nome:"ARTHUR",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-05-02",ano:"2023",prestador:"CHN - Complexo Hosp. de Niteroi RJ",linha:"NÃO INFORMADO",carteira:"Empresarial (Outros)"},
+  {nome:"Guilherme Tega",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-05-12",ano:"2023",prestador:"AC Camargo",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"DENISE",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-08-01",ano:"2023",prestador:"Hosp. Albert Einstein",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"ANTONIO AURELIO",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-04-05",ano:"2023",prestador:"Rede D'or - São Luiz Itaim",linha:"4ª LINHA",carteira:"Empresarial (Outros)"},
+  {nome:"RENATO BASSI",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-09-05",ano:"2023",prestador:"AC Camargo",linha:"NÃO INFORMADO",carteira:"Empresarial (Outros)"},
+  {nome:"ALINE BRUNO",terapia:"Kymriah",tipo:"LIMINAR",data:"2023-01-04",ano:"2023",prestador:"Rede D'or - Glória D'Or",linha:"NÃO INFORMADO",carteira:"Empresarial (Outros)"},
+  {nome:"GUILHERME TROVO",terapia:"Kymriah",tipo:"LIMINAR",data:"2024-07-02",ano:"2024",prestador:"AC Camargo",linha:"NÃO INFORMADO",carteira:"Empresarial (Outros)"},
+  {nome:"GABRIEL",terapia:"Kymriah",tipo:"LIMINAR",data:"2024-08-08",ano:"2024",prestador:"Rede D'or - São Rafael",linha:"3ª LINHA",carteira:"PME"},
+  {nome:"JULIO CESAR",terapia:"Kymriah",tipo:"LIMINAR",data:"2025-01-22",ano:"2025",prestador:"Rede D'or - São Luiz Itaim",linha:"4ª LINHA",carteira:"PME"},
+  {nome:"NICOLAS",terapia:"Kymriah",tipo:"LIMINAR",data:"2025-10-22",ano:"2025",prestador:"Rede D'or - São Luiz Itaim",linha:"3ª LINHA",carteira:"Empresarial (Outros)"}
+];
+
+let filtered=[...DATA];
+
+function applyFilters(){
+  const ter=document.getElementById('f-terapia').value;
+  const tip=document.getElementById('f-tipo').value;
+  const lin=document.getElementById('f-linha').value;
+  const ano=document.getElementById('f-ano').value;
+  filtered=DATA.filter(d=>(!ter||d.terapia===ter)&&(!tip||d.tipo===tip)&&(!lin||d.linha===lin)&&(!ano||d.ano===ano));
+  document.getElementById('filter-count').textContent=filtered.length<DATA.length?`${filtered.length} de ${DATA.length} registros`:'';
+  render();
+}
+function resetFilters(){
+  ['f-terapia','f-tipo','f-linha','f-ano'].forEach(id=>document.getElementById(id).value='');
+  applyFilters();
+}
+['f-terapia','f-tipo','f-linha','f-ano'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+
+function cnt(arr,key,val){return arr.filter(d=>d[key]===val).length;}
+function countUniq(arr,key){const m={};arr.forEach(d=>{m[d[key]]=(m[d[key]]||0)+1;});return m;}
+function pct(n,t){return t?Math.round(n*100/t)+'%':'0%';}
+
+const C={yesc:'#1565C0',carv:'#2E7D32',kymr:'#6A1B9A',lim:'#2980B9',rc:'#27AE60',lib:'#8E44AD',agu:'#E67E22',ni:'#9E9E9E'};
+const charts={};
+
+function buildOrUpdate(id,type,data,options){
+  if(charts[id]){charts[id].data=data;charts[id].update();return;}
+  charts[id]=new Chart(document.getElementById(id),{type,data,
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12,padding:8}}},...options}});
+}
+
+function renderTemporal(arr){
+  const anos=['2022','2023','2024','2025','2026'];
+  const terapias=['Yescarta','Carvykti','Kymriah'];
+  const colors=[C.yesc,C.carv,C.kymr];
+  const datasets=terapias.map((t,i)=>({
+    label:t,data:anos.map(a=>arr.filter(d=>d.terapia===t&&d.ano===a).length),
+    backgroundColor:colors[i]+'CC',borderColor:colors[i],borderWidth:1.5,borderRadius:3
+  }));
+  buildOrUpdate('chartTemporal','bar',{labels:anos,datasets},{
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,ticks:{stepSize:1},grid:{color:'#F0F0F0'}}},
+    plugins:{legend:{position:'bottom'}}
+  });
+}
+
+function renderTipo(arr){
+  const tipos=['LIMINAR','RISCO COMPARTILHADO','LIBERALIDADE','AGUARDANDO','NÃO INFORMADO'];
+  const colors=[C.lim,C.rc,C.lib,C.agu,C.ni];
+  buildOrUpdate('chartTipo','doughnut',
+    {labels:tipos.map(t=>t==='RISCO COMPARTILHADO'?'RISCO COMP.':t),
+     datasets:[{data:tipos.map(t=>cnt(arr,'tipo',t)),backgroundColor:colors,borderWidth:2,borderColor:'#fff',hoverOffset:6}]},
+    {cutout:'58%',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}}}
+  );
+}
+
+function renderLinha(arr){
+  const linhas=['4ª LINHA','3ª LINHA','2ª LINHA','5ª LINHA','1ª LINHA','NÃO INFORMADO'];
+  const colors=['#1565C0','#0097A7','#00796B','#6A1B9A','#004D40','#9E9E9E'];
+  buildOrUpdate('chartLinha','bar',
+    {labels:linhas,datasets:[{data:linhas.map(l=>cnt(arr,'linha',l)),backgroundColor:colors,borderRadius:4,borderSkipped:false}]},
+    {indexAxis:'y',plugins:{legend:{display:false}},
+     scales:{x:{beginAtZero:true,ticks:{stepSize:2},grid:{color:'#F0F0F0'}},y:{grid:{display:false}}}}
+  );
+}
+
+function renderCarteira(arr){
+  const known=['PME','Adesão','Individual','Empresarial (Qualicorp)','Empresarial (Outros)','Administrado','Ex-beneficiário'];
+  const m=countUniq(arr,'carteira');
+  const data=known.map(k=>m[k]||0);
+  const outros=Object.entries(m).filter(([k])=>!known.includes(k)&&k!=='NÃO INFORMADO'&&k!=='—').reduce((s,[,v])=>s+v,0);
+  if(outros){data.push(outros);known.push('Outros');}
+  data.push(m['NÃO INFORMADO']||0);known.push('Não Inf.');
+  const palette=['#1565C0','#0288D1','#00838F','#2E7D32','#558B2F','#F57F17','#E65100','#9E9E9E','#BDBDBD'];
+  buildOrUpdate('chartCarteira','pie',
+    {labels:known,datasets:[{data,backgroundColor:palette.slice(0,known.length),borderWidth:1.5,borderColor:'#fff'}]},
+    {plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10,padding:5}}}}
+  );
+}
+
+function renderTerapiaTipo(arr){
+  const terapias=['Yescarta','Carvykti','Kymriah'];
+  const tipos=['LIMINAR','RISCO COMPARTILHADO','LIBERALIDADE','AGUARDANDO'];
+  const tColors=[C.lim,C.rc,C.lib,C.agu];
+  const datasets=tipos.map((t,i)=>({
+    label:t==='RISCO COMPARTILHADO'?'R.COMP.':t,
+    data:terapias.map(ter=>arr.filter(d=>d.terapia===ter&&d.tipo===t).length),
+    backgroundColor:tColors[i]+'CC',borderColor:tColors[i],borderWidth:1.5,borderRadius:3
+  }));
+  buildOrUpdate('chartTerapiaTipo','bar',{labels:terapias,datasets},{
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,ticks:{stepSize:2},grid:{color:'#F0F0F0'}}},
+    plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}}
+  });
+}
+
+function renderPrestador(arr){
+  const m=countUniq(arr,'prestador');
+  delete m['—'];delete m['NÃO INFORMADO'];delete m['sem informação'];
+  const sorted=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const palette=['#1565C0','#0288D1','#2E7D32','#558B2F','#6A1B9A','#00838F','#F57F17','#E65100'];
+  buildOrUpdate('chartPrestador','bar',
+    {labels:sorted.map(([k])=>k.length>32?k.slice(0,30)+'…':k),
+     datasets:[{data:sorted.map(([,v])=>v),backgroundColor:palette,borderRadius:4,borderSkipped:false}]},
+    {indexAxis:'y',plugins:{legend:{display:false}},
+     scales:{x:{beginAtZero:true,ticks:{stepSize:1},grid:{color:'#F0F0F0'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+  );
+}
+
+function renderKPIs(arr){
+  const tot=arr.length;
+  document.getElementById('hdr-total').textContent=tot;
+  document.getElementById('kpi-total').textContent=tot;
+  const y=cnt(arr,'terapia','Yescarta'),c=cnt(arr,'terapia','Carvykti'),k=cnt(arr,'terapia','Kymriah'),l=cnt(arr,'tipo','LIMINAR');
+  document.getElementById('kpi-yesc').textContent=y;
+  document.getElementById('kpi-yesc-pct').textContent=pct(y,tot)+' do total';
+  document.getElementById('kpi-carv').textContent=c;
+  document.getElementById('kpi-carv-pct').textContent=pct(c,tot)+' do total';
+  document.getElementById('kpi-kymr').textContent=k;
+  document.getElementById('kpi-kymr-pct').textContent=pct(k,tot)+' do total';
+  document.getElementById('kpi-lim').textContent=l;
+  document.getElementById('kpi-lim-pct').textContent=pct(l,tot)+' do total';
+}
+
+function tipoTag(t){
+  const map={'LIMINAR':'LIMINAR','RISCO COMPARTILHADO':'RC','LIBERALIDADE':'LIBERALIDADE','AGUARDANDO':'AGUARDANDO'};
+  const cls=map[t]||'NI';
+  return `<span class="tag ${cls}">${t==='RISCO COMPARTILHADO'?'R. COMPARTILHADO':t}</span>`;
+}
+function terapiaTag(t){return `<span class="tag ${t}">${t}</span>`;}
+
+function renderTable(arr){
+  document.getElementById('tbl-count').textContent=arr.length;
+  document.getElementById('tbl-body').innerHTML=arr.map((d,i)=>`
+    <tr>
+      <td style="color:#9E9E9E;font-size:11px">${i+1}</td>
+      <td style="font-weight:600">${d.nome}</td>
+      <td>${terapiaTag(d.terapia)}</td>
+      <td>${tipoTag(d.tipo)}</td>
+      <td style="font-size:11px">${d.linha}</td>
+      <td style="font-size:11px;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${d.prestador}">${d.prestador}</td>
+      <td style="font-size:10px;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${d.carteira}">${d.carteira}</td>
+      <td style="font-size:11px;color:${d.data?'var(--text)':'#BDBDBD'}">${d.data||'—'}</td>
+    </tr>`).join('');
+}
+
+function render(){
+  renderKPIs(filtered);
+  renderTemporal(filtered);
+  renderTipo(filtered);
+  renderLinha(filtered);
+  renderCarteira(filtered);
+  renderTerapiaTipo(filtered);
+  renderPrestador(filtered);
+  renderTable(filtered);
+}
+
+render();
+</script>
+</body>
+</html>

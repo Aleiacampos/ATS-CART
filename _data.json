@@ -1,0 +1,662 @@
+[
+  {
+    "nome": "Omar",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2023-12-04",
+    "ano": "2023",
+    "prestador": "Hosp. 9 de Julho",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Maria Estela",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2023-12-05",
+    "ano": "2023",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "4ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "Luciana Pimentel",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-12-16",
+    "ano": "2024",
+    "prestador": "Hosp. Sirio Libanes",
+    "linha": "3ª LINHA",
+    "carteira": "Administrado"
+  },
+  {
+    "nome": "Tatiana",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-03-22",
+    "ano": "2024",
+    "prestador": "sem informação",
+    "linha": "4ª LINHA",
+    "carteira": "EXCLUSAO DO PLANO"
+  },
+  {
+    "nome": "Antonio Amorim",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-08-08",
+    "ano": "2024",
+    "prestador": "Rede D'or - São Rafael",
+    "linha": "4ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "Alexandre",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-01-23",
+    "ano": "2024",
+    "prestador": "CHN- Complexo Hospitalar de Niteroi",
+    "linha": "4ª LINHA",
+    "carteira": "RESERVOIR GROUP FO BRASIL SERVICOS DE PETROLEO LTDA"
+  },
+  {
+    "nome": "Adriana",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-02-02",
+    "ano": "2024",
+    "prestador": "AC Camargo",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Vinicius",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-01-04",
+    "ano": "2024",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Outros)"
+  },
+  {
+    "nome": "Victoria",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-01-31",
+    "ano": "2024",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "4ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "Joao Carlos",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-06-21",
+    "ano": "2024",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "Luciana Medeiros",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2024-12-16",
+    "ano": "2024",
+    "prestador": "AC Camargo",
+    "linha": "2ª LINHA",
+    "carteira": "BOM NEGOCIO ATIVIDADES DE INTERNET LTDA"
+  },
+  {
+    "nome": "João de Matos",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2025-01-02",
+    "ano": "2025",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "3ª LINHA",
+    "carteira": "T SYSTEMS DO BRASIL LTDA DEM E OU APOSENT"
+  },
+  {
+    "nome": "Silvana",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2025-08-07",
+    "ano": "2025",
+    "prestador": "AC Camargo",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "Carolina",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2025-06-06",
+    "ano": "2025",
+    "prestador": "Hosp. 9 de Julho - Rede ímpar",
+    "linha": "3ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Andre Cippra",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2025-06-23",
+    "ano": "2025",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "3ª LINHA",
+    "carteira": "PAGSEGURO INTERNET INSTITUICAO DE PAGAMENTO SA"
+  },
+  {
+    "nome": "Alberto",
+    "terapia": "Yescarta",
+    "tipo": "LIMINAR",
+    "data": "2025-07-31",
+    "ano": "2025",
+    "prestador": "Rede D'or -Hosp. Memorial São José/Recife",
+    "linha": "3ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Priscilia",
+    "terapia": "Yescarta",
+    "tipo": "LIBERALIDADE",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "3ª LINHA",
+    "carteira": "ENTERPRISE SERVICES BRASIL SERVICOS DE TECNOLOGIA LTDA"
+  },
+  {
+    "nome": "Maria das Graças",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Rafael",
+    "linha": "2ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "Aline",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "AC Camargo",
+    "linha": "2ª LINHA",
+    "carteira": "ORANGE BUSINESS SERVICES BRASIL LTDA"
+  },
+  {
+    "nome": "Cassio",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Francesca",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Hudnesca",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Sandra",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "AC Camargo",
+    "linha": "2ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "Jessica",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "3ª LINHA",
+    "carteira": "VECTOR TRANSPORTES E TECNOLOGIA SA"
+  },
+  {
+    "nome": "Jose valeriano",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "3ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "Reinaldo",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "Joel",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - Vila Nova Star",
+    "linha": "2ª LINHA",
+    "carteira": "SUN CHEMICAL DO BRASIL LTDA"
+  },
+  {
+    "nome": "Reto",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Ricardo",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "2ª LINHA",
+    "carteira": "SDB COMERCIO DE ALIMENTOS LTDA"
+  },
+  {
+    "nome": "Rafael",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Rafael",
+    "linha": "2ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "Aquiochi",
+    "terapia": "Yescarta",
+    "tipo": "RISCO COMPARTILHADO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rede D'or - São Rafael",
+    "linha": "3ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "Regina",
+    "terapia": "Yescarta",
+    "tipo": "AGUARDANDO",
+    "data": null,
+    "ano": "S/D",
+    "prestador": "Rio de Janeiro",
+    "linha": "2ª LINHA",
+    "carteira": "LIDER TAXI AEREO SA AIR BRASIL"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-12-05",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "3ª LINHA",
+    "carteira": "PATRIMONIAL CASTRO OLIVEIRA LTDA"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2024-08-02",
+    "ano": "2024",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "CUMMINS BRASIL LIMITADA"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-24",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "5ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-01",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "APC SOLUTIONS FOMENTO MERCANTIL FACTORING LTDA"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-26",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "INFRAMERICA CONCESSIONARIA DO AEROPORTO DE BRASILIA"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2024-10-25",
+    "ano": "2024",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "BANCO XP S A"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-07-17",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "2ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-02-27",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "3ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-08-19",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-31",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "5ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-11-15",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-02-05",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2024-09-20",
+    "ano": "2024",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-05-19",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-03",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Adesão"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2025-08-22",
+    "ano": "2025",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Empresarial (Qualicorp)"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-03-05",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIBERALIDADE",
+    "data": "2026-03-13",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "CRBS SA/Ambev"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-02-20",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "3ª LINHA",
+    "carteira": "Individual"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "LIMINAR",
+    "data": "2026-04-29",
+    "ano": "2026",
+    "prestador": "NÃO INFORMADO",
+    "linha": "3ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "AGUARDANDO",
+    "data": "não há ",
+    "ano": "não ",
+    "prestador": "NÃO INFORMADO",
+    "linha": "4ª LINHA",
+    "carteira": "8 FOLS - EXTRAMED ADMINISTRACAO E SERVICOS MEDICOS MUTUA PR"
+  },
+  {
+    "nome": "NÃO INFORMADO",
+    "terapia": "Carvykti",
+    "tipo": "AGUARDANDO",
+    "data": "não há ",
+    "ano": "não ",
+    "prestador": "NÃO INFORMADO",
+    "linha": "2ª LINHA",
+    "carteira": "Vetta Tecnologia"
+  },
+  {
+    "nome": "MEIRE",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2022-12-29",
+    "ano": "2022",
+    "prestador": "Hosp. Albert Einstein",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "MARIA DE FATIMA",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-03-15",
+    "ano": "2023",
+    "prestador": "Centro de Saúde São José RJ",
+    "linha": "NÃO INFORMADO",
+    "carteira": "PME"
+  },
+  {
+    "nome": "ARTHUR",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-05-02",
+    "ano": "2023",
+    "prestador": "CHN- Complexo Hosp. de Niteroi RJ",
+    "linha": "NÃO INFORMADO",
+    "carteira": "FABRICA CARIOCA DE CATALISADORES S A"
+  },
+  {
+    "nome": "Guilherme Tega",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-05-12",
+    "ano": "2023",
+    "prestador": "AC Camargo",
+    "linha": "4ª LINHA",
+    "carteira": "SPAL INDUSTRIA BRASILEIRA DE BEBIDAS S A"
+  },
+  {
+    "nome": "DENISE",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-08-01",
+    "ano": "2023",
+    "prestador": "Hosp. Albert Einstein",
+    "linha": "4ª LINHA",
+    "carteira": "BRASPINE MADEIRAS LTDA"
+  },
+  {
+    "nome": "ANTONIO AURELIO",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-04-05",
+    "ano": "2023",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "4ª LINHA",
+    "carteira": "MODAL DISTRIBUIDORA DE TIT E VALORES MOBILIARIOS LTDA"
+  },
+  {
+    "nome": "RENATO BASSI",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-09-05",
+    "ano": "2023",
+    "prestador": "AC Camargo",
+    "linha": "NÃO INFORMADO",
+    "carteira": "GENERAL MOTORS DO BRASIL LTDA"
+  },
+  {
+    "nome": "ALINE BRUNO",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2023-01-04",
+    "ano": "2023",
+    "prestador": "Rede D'or - Glória D'Or",
+    "linha": "NÃO INFORMADO",
+    "carteira": "FUNDACAO KONRAD ADENAUER STIFTUNG EV"
+  },
+  {
+    "nome": "GUILHERME TROVO",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2024-07-02",
+    "ano": "2024",
+    "prestador": "AC Camargo",
+    "linha": "NÃO INFORMADO",
+    "carteira": "PAGSEGURO INTERNET INSTITUICAO DE PAGAMENTO S A"
+  },
+  {
+    "nome": "GABRIEL",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2024-08-08",
+    "ano": "2024",
+    "prestador": "Rede D'or - São Rafael",
+    "linha": "3ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "JULIO CESAR",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2025-01-22",
+    "ano": "2025",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "4ª LINHA",
+    "carteira": "PME"
+  },
+  {
+    "nome": "NICOLAS",
+    "terapia": "Kymriah",
+    "tipo": "LIMINAR",
+    "data": "2025-10-22",
+    "ano": "2025",
+    "prestador": "Rede D'or - São Luiz Itaim",
+    "linha": "3ª LINHA",
+    "carteira": "ALLPARK EMPREENDIMENTOS PARTICIPACOES E SERVICOS SA"
+  }
+]
